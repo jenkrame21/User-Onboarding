@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 // grabbing info from schemaForm as 'yup'
 import * as yup from 'yup'
-
-// uses axios to post data
+// uses axios to grab data then post using postInfo function
 import axios from 'axios'
 
 // form function that passes 'props'
@@ -15,6 +14,7 @@ const Form = (props) => {
         password: '',
         TOS: false
     })
+    const [ users, setUsers ] = useState([])
 
     // grabs the post info from the link
     const postInfo = (person) => {
@@ -48,7 +48,7 @@ const Form = (props) => {
 
     // gives the submit button a click function
     const onSubmit = (event) => {
-        //
+        //prevents the user from submitting information 
         event.preventDefault()
         // refers to postInfo function and posts to the backend
         postInfo(info)

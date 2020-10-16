@@ -9,8 +9,10 @@ describe('Form App', () => {
     const typeNameInput = () => cy.get('input[name="fName"]')
     const typeEmailInput = () => cy.get('input[email="email"]')
     const typePasswordInput = () => cy.get('input[password="password"]')
+    const toggleTOSBox = () => cy.get('input[type="checkbox"]')
+    const submitBtn = () => cy.get('button')
 
-    it('Type name in input', () => {
+    it('User can type name/email/password in input', () => {
         typeNameInput()
             .should('have.value', '')
             .type('Jennifer')
@@ -23,6 +25,20 @@ describe('Form App', () => {
             .should('have.value', '')
             .type('password1234')
             .should('have.value', 'password1234')
+    })
+    it('User can check Terms of Service checkbox', () => {
+        toggleTOSBox()
+            .click()
+    })
+    it('User can submit the form data', () => {
+        typeNameInput()
+            .should('have.value', '')
+        typeEmailInput()
+            .should('have.value', '')
+        typePasswordInput()
+            .should('have.value', '')
+        submitBtn()
+            .click()
     })
 
 })

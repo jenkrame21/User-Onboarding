@@ -1,10 +1,10 @@
 import * as yup from "yup";
 
 export default yup.object().shape({
-    name: yup
+    fName: yup
         .string()
-        .required("Username is required.")
-        .min(3, "Username must be 3 character."),
+        .required("Name is required.")
+        .min(3, "Name must be at least 3 characters."),
     email: yup
         .string()
         .email("Must be a valid email address.")
@@ -14,4 +14,5 @@ export default yup.object().shape({
         .required("Password is required."),
     TOS: yup
         .boolean()
+        .oneOf([true], "You must accept Terms of Service.")
 });

@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 // grabbing info from schemaForm as 'yup'
 import * as yup from 'yup'
+import schema from './schemaForm'
 // uses axios to grab data then post using postInfo function
 import axios from 'axios'
 
@@ -14,7 +15,39 @@ const Form = (props) => {
         password: '',
         TOS: false
     })
+    const [ disabled, setDisabled ] = useState(false)
     const [ users, setUsers ] = useState([])
+    const [ error, setError ] = useState({
+        fName: '',
+        email: '',
+        password: '',
+        TOS: ''
+    })
+
+    const validate = (name, value) => {
+        yup
+            .reach(schema, name)
+            .validate(value)
+            .then((res) => {
+                setError({
+                    ...error,
+                    [name]: ""
+                })
+            })
+            .catch((err) => {
+                setError({
+                    ...error,
+                    [name]: err.errors[0]
+                })
+            })
+    }
+    const change = (name, value) => {
+        validate(name, value)
+        setInfo({
+            ...info,
+            [name]: value
+        })
+    }
 
     // grabs the post info from the link
     const postInfo = (person) => {
@@ -30,28 +63,36 @@ const Form = (props) => {
 
     // gives the click an event to fire // toggle
     const onChange = (event) => {
-        if (event.target.type === 'checkbox') {
-            setInfo({
-                ...info,
-                TOS: !info.TOS
-            })
-        } else {
-            setInfo({
-                ...info,
-                // one way
-                // fName:
-                // another way
-                [event.target.name]: event.target.value
-            })
-        }
+        // if (event.target.type === 'checkbox') {
+        //     setInfo({
+        //         ...info,
+        //         TOS: !info.TOS
+        //     })
+        // } else {
+        //     setInfo({
+        //         ...info,
+        //         // one way
+        //         // fName:
+        //         // another way
+        //         [event.target.name]: event.target.value
+        //     })
+        // }
+        const rightValue = event.target.type === 'checkbox' ? event.target.checked : event.target.value
+        change(event.target.name, rightValue)
     }
 
     // gives the submit button a click function
     const onSubmit = (event) => {
-        //prevents the user from submitting information 
+        // stops page from refreshing
         event.preventDefault()
         // refers to postInfo function and posts to the backend
-        postInfo(info)
+        const person = {
+            fName: info.fName,
+            email: info.email,
+            password: info.password,
+            TOS: ['Approved']
+        }
+        postInfo(person)
         //setInfo becomes reset
         setInfo({
             fName: '',
@@ -59,7 +100,14 @@ const Form = (props) => {
             password: '',
             TOS: false
         })
-    }    
+    }
+
+    useEffect(() => {
+        schema.isValid(info)
+        .then((res) => {
+            setDisabled(!res)
+        })
+    }, [info])
 
     // creates a div of information
     return (
@@ -101,11 +149,18 @@ const Form = (props) => {
                     <input
                         id='TOS'
                         type='checkbox'
+                        name='TOS'
                         checked={info.TOS}
                         onChange={onChange}
                     />
                 </label>
-                <button>Submit</button>
+                <button disabled={disabled}>Submit</button>
+                <div>
+                    <p>{error.fName}</p>
+                    <p>{error.email}</p>
+                    <p>{error.password}</p>
+                    <p>{error.TOS}</p>
+                </div>
             </form>
         </div>
     )

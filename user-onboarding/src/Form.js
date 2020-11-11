@@ -16,7 +16,7 @@ const Form = (props) => {
         TOS: false
     })
     const [ disabled, setDisabled ] = useState(false)
-    const [ users, setUsers ] = useState([])
+    // const [ users, setUsers ] = useState([])
     const [ error, setError ] = useState({
         fName: '',
         email: '',
@@ -109,9 +109,10 @@ const Form = (props) => {
         })
     }, [info])
 
-    // creates a div of information
+    // creates a JSX div of information exporting Form to App.js
     return (
         <div>
+            <h1>User Onboarding Form</h1>
             <form onSubmit={onSubmit}>
                 <label>Name: 
                     <input 
